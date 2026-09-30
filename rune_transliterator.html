@@ -1,0 +1,436 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ᚷᚱᚢᛗ</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cardo:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Runic&display=swap">
+<style>
+/* Layout: one centred column; the carving panel is the hero, controls sit beneath it, the futhark chart closes the page. */
+:root{
+  --bg:#e8eae5; --panel:#f4f5f2; --fg:#1b201e; --muted:#69726c;
+  --line:#c7ccc4; --line-soft:#dbdfd8; --accent:#3d6a56; --ember:#98552f;
+  --font-display:"Cardo",Georgia,"Times New Roman",serif;
+  --font-ui:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --font-rune:"Noto Sans Runic","Segoe UI Historic","Segoe UI Symbol",serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141719; --panel:#1c2123; --fg:#e4e8e3; --muted:#8a938c;
+  --line:#2f3639; --line-soft:#252b2d; --accent:#7fb79c; --ember:#cd8a5d;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#141719; --panel:#1c2123; --fg:#e4e8e3; --muted:#8a938c;
+  --line:#2f3639; --line-soft:#252b2d; --accent:#7fb79c; --ember:#cd8a5d;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-ui);line-height:1.55;margin:0}
+.wrap{max-width:760px;margin:0 auto;padding-inline:20px;padding-block:40px 64px}
+
+header{margin-bottom:28px}
+.mark{font-family:var(--font-rune);font-size:34px;letter-spacing:.14em;color:var(--accent);line-height:1}
+h1{font-family:var(--font-display);font-size:29px;font-weight:700;margin:10px 0 6px;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);font-size:14.5px;max-width:58ch;margin:0}
+
+/* carving panel */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:3px;margin-top:26px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:10px 16px;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
+.count{font-family:var(--font-mono);font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+#rune{font-family:var(--font-rune);font-size:clamp(26px,6.4vw,38px);line-height:1.75;
+  padding:22px 16px;min-height:132px;outline:none;white-space:pre-wrap;overflow-wrap:break-word;
+  caret-color:var(--ember);letter-spacing:.06em}
+#rune:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+#rune:empty::before{content:attr(data-placeholder);color:var(--muted);font-family:var(--font-ui);
+  font-size:15px;letter-spacing:0}
+#rune::selection{background:color-mix(in srgb,var(--accent) 30%,transparent)}
+
+.latin{border-top:1px dashed var(--line-soft);padding:10px 16px;font-family:var(--font-mono);
+  font-size:13px;color:var(--muted);white-space:pre-wrap;overflow-wrap:break-word;min-height:38px}
+.latin .caret-hint{color:var(--ember)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+.seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;flex-wrap:wrap}
+.seg button{appearance:none;background:transparent;border:0;border-right:1px solid var(--line);
+  font:inherit;font-size:13px;padding:7px 13px;color:var(--muted);cursor:pointer;min-width:0}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--panel);font-weight:500}
+.seg button:hover:not([aria-pressed="true"]){color:var(--fg)}
+.spacer{flex:1 1 auto;min-width:0}
+.btn{appearance:none;background:transparent;border:1px solid var(--line);border-radius:3px;
+  font:inherit;font-size:13px;padding:7px 13px;color:var(--fg);cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.toggles{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.tog{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer}
+.tog input{accent-color:var(--accent);margin:0}
+.tog:hover{color:var(--fg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* futhark chart */
+section.chart{margin-top:44px}
+h2{font-family:var(--font-display);font-size:19px;font-weight:700;margin:0 0 4px}
+.note{font-size:13px;color:var(--muted);margin:0 0 16px;max-width:62ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:1px;
+  background:var(--line-soft);border:1px solid var(--line-soft)}
+.cell{background:var(--panel);padding:10px 4px;text-align:center}
+.cell .r{font-family:var(--font-rune);font-size:25px;line-height:1.25;color:var(--fg)}
+.cell .k{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:3px}
+.rules{margin-top:18px;border-left:2px solid var(--accent);padding:2px 0 2px 14px}
+.rules dt{font-size:11px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
+.rules dd{margin:6px 0 0;font-size:13.5px;line-height:1.75}
+.rules b{font-family:var(--font-mono);font-weight:500;color:var(--fg)}
+.rules .r{font-family:var(--font-rune);font-size:16px;color:var(--accent)}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line-soft);
+  font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="mark">ᚷᚱᚢᛗ</div>
+    <h1>Type in English, read it in runes</h1>
+    <p class="sub">Every keystroke re-carves the line. Because runes work by sound-cluster, letters
+      already on screen can change as you keep typing: press <b>t</b> and you get ᛏ, press <b>h</b> after it
+      and both collapse into ᚦ.</p>
+  </header>
+
+  <div class="panel">
+    <div class="panel-head">
+      <span class="eyebrow" id="setName">Elder Futhark</span>
+      <span class="count" id="count">0 runes · 0 letters</span>
+    </div>
+    <div id="rune" contenteditable="true" spellcheck="false" role="textbox" aria-multiline="true"
+         aria-label="Runic text. Type in English." data-placeholder="Start typing…"></div>
+    <div class="latin" id="latin" hidden></div>
+  </div>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Rune set">
+      <button type="button" data-set="elder" aria-pressed="true">Elder</button>
+      <button type="button" data-set="futhorc" aria-pressed="false">Futhorc</button>
+      <button type="button" data-set="younger" aria-pressed="false">Younger</button>
+    </div>
+    <span class="spacer"></span>
+    <button type="button" class="btn" id="copy">Copy runes</button>
+    <button type="button" class="btn" id="clear">Clear</button>
+  </div>
+
+  <div class="toggles">
+    <label class="tog"><input type="checkbox" id="optReveal"> Show the English underneath</label>
+    <label class="tog"><input type="checkbox" id="optDividers"> Word dividers (᛫) instead of spaces</label>
+    <label class="tog"><input type="checkbox" id="optDoubles"> Collapse doubled letters</label>
+  </div>
+
+  <section class="chart">
+    <h2 id="chartTitle">The Elder Futhark</h2>
+    <p class="note" id="chartNote"></p>
+    <div class="grid" id="grid"></div>
+    <dl class="rules">
+      <dt>Spelling rules in this set</dt>
+      <dd id="rules"></dd>
+    </dl>
+  </section>
+
+  <footer>Transliteration follows spelling, not pronunciation — <b>knight</b> keeps its k and gh.
+    Runes render in Noto Sans Runic.</footer>
+</div>
+
+<script>
+const SETS = {
+  elder: {
+    label:'Elder Futhark', title:'The Elder Futhark',
+    note:'Twenty-four runes, in use across Germanic Europe from roughly the 2nd to the 8th century. The most widely recognised set, and the usual default for English.',
+    multi:{th:'ᚦ',ng:'ᛜ',ei:'ᛇ',ph:'ᚠ',ck:'ᚲ',wh:'ᚹ',qu:'ᚲᚹ'},
+    single:{a:'ᚨ',b:'ᛒ',d:'ᛞ',e:'ᛖ',f:'ᚠ',g:'ᚷ',h:'ᚻ',i:'ᛁ',
+      j:'ᛃ',k:'ᚲ',l:'ᛚ',m:'ᛗ',n:'ᚾ',o:'ᛟ',p:'ᛈ',q:'ᚲ',
+      r:'ᚱ',s:'ᛊ',t:'ᛏ',u:'ᚢ',v:'ᚹ',w:'ᚹ',x:'ᚲᛊ',y:'ᛁ',z:'ᛉ'},
+    softC:'ᛊ', hardC:'ᚲ', initialY:'ᛃ',
+    order:['f','u','th','a','r','k','g','w','h','n','i','j','ei','p','z','s','t','b','e','m','l','ng','d','o'],
+    rules:'<b>c</b> → <span class="r">ᛊ</span> before e, i or y — otherwise <span class="r">ᚲ</span>. '+
+          '<b>y</b> → <span class="r">ᛃ</span> at the start of a word, <span class="r">ᛁ</span> inside one. '+
+          '<b>qu</b> → <span class="r">ᚲᚹ</span>, <b>x</b> → <span class="r">ᚲᛊ</span>, <b>v</b> → <span class="r">ᚹ</span>. '+
+          '<b>ph</b> → <span class="r">ᚠ</span>, <b>ck</b> → <span class="r">ᚲ</span>, <b>wh</b> → <span class="r">ᚹ</span>.'
+  },
+  futhorc: {
+    label:'Anglo-Saxon Futhorc', title:'The Anglo-Saxon Futhorc',
+    note:'The set Old English was actually written in. It grew to thirty-three runes to cover sounds the Elder Futhark had no letter for, which makes it the closest historical fit for an English source text.',
+    multi:{th:'ᚦ',ng:'ᛝ',ea:'ᛠ',eo:'ᛇ',ae:'ᚫ',io:'ᛡ',st:'ᛥ',
+      ph:'ᚠ',ck:'ᚳ',wh:'ᚹ',qu:'ᛢ',oe:'ᛟ'},
+    single:{a:'ᚪ',b:'ᛒ',d:'ᛞ',e:'ᛖ',f:'ᚠ',g:'ᚷ',h:'ᚻ',i:'ᛁ',
+      j:'ᛄ',k:'ᛣ',l:'ᛚ',m:'ᛗ',n:'ᚾ',o:'ᚩ',p:'ᛈ',q:'ᛢ',
+      r:'ᚱ',s:'ᛋ',t:'ᛏ',u:'ᚢ',v:'ᚠ',w:'ᚹ',x:'ᛉ',y:'ᚣ',z:'ᛋ'},
+    softC:'ᛋ', hardC:'ᚳ', initialY:null,
+    order:['f','u','th','o','r','c','g','w','h','n','i','j','eo','p','x','s','t','b','e','m','l','ng','oe','d','a','ae','y','io','ea','k','st','qu'],
+    rules:'<b>c</b> → <span class="r">ᛋ</span> before e, i or y — otherwise <span class="r">ᚳ</span>. '+
+          '<b>q</b> and <b>qu</b> → <span class="r">ᛢ</span> (cweorð). '+
+          '<b>v</b> → <span class="r">ᚠ</span>, <b>z</b> → <span class="r">ᛋ</span>, <b>k</b> → <span class="r">ᛣ</span> (calc). '+
+          '<b>st</b> takes its own rune, <span class="r">ᛥ</span>.'
+  },
+  younger: {
+    label:'Younger Futhark', title:'The Younger Futhark',
+    note:'The Viking Age set, cut down to sixteen runes even as the spoken language gained sounds. One rune carries several letters, so this set is lossy by design: the runes here cannot be read back to a single spelling.',
+    multi:{th:'ᚦ',ng:'ᚾᚴ',ck:'ᚴ',ph:'ᚠ',wh:'ᚢ',qu:'ᚴᚢ'},
+    single:{a:'ᛅ',b:'ᛒ',d:'ᛏ',e:'ᛁ',f:'ᚠ',g:'ᚴ',h:'ᚼ',i:'ᛁ',
+      j:'ᛁ',k:'ᚴ',l:'ᛚ',m:'ᛘ',n:'ᚾ',o:'ᚢ',p:'ᛒ',q:'ᚴ',
+      r:'ᚱ',s:'ᛋ',t:'ᛏ',u:'ᚢ',v:'ᚢ',w:'ᚢ',x:'ᚴᛋ',y:'ᛁ',z:'ᛋ'},
+    softC:'ᛋ', hardC:'ᚴ', initialY:null,
+    order:['f','u','th','r','k','h','n','i','a','s','t','b','m','l'],
+    rules:'No separate runes for e, o, d, g, p or w: <b>e</b> → <span class="r">ᛁ</span>, '+
+          '<b>o</b>, <b>w</b>, <b>v</b> → <span class="r">ᚢ</span>, <b>d</b> → <span class="r">ᛏ</span>, '+
+          '<b>g</b> → <span class="r">ᚴ</span>, <b>p</b> → <span class="r">ᛒ</span>. '+
+          '<b>ng</b> → <span class="r">ᚾᚴ</span>, <b>x</b> → <span class="r">ᚴᛋ</span>. '+
+          'Two of the sixteen, <span class="r">ᚬ</span> (nasal a) and <span class="r">ᛦ</span> (ʀ), '+
+          'depend on sounds English spelling does not mark, so this tool never produces them.'
+  }
+};
+
+const isLetter = ch => ch >= 'a' && ch <= 'z';
+
+function transliterate(src, setId, opts){
+  const set = SETS[setId], lower = src.toLowerCase(), clusters = [];
+  let i = 0;
+  while(i < src.length){
+    const ch = lower[i];
+    let len = 1, out;
+    if(isLetter(ch)){
+      const two = lower.slice(i, i+2);
+      if(two.length === 2 && set.multi[two]){ len = 2; out = set.multi[two]; }
+      else if(ch === 'c'){
+        const n = lower[i+1];
+        out = (n === 'e' || n === 'i' || n === 'y') ? set.softC : set.hardC;
+      }
+      else if(ch === 'y' && set.initialY){
+        out = !isLetter(i > 0 ? lower[i-1] : '') ? set.initialY : set.single.y;
+      }
+      else out = set.single[ch] || src[i];
+      if(opts.collapseDoubles && len === 1 && lower[i+1] === ch){
+        let run = 1;
+        while(i + run < src.length && lower[i+run] === ch) run++;
+        len = run;
+      }
+    }
+    else if(ch === ' ' && opts.dividers) out = '᛫';
+    else out = src[i];
+    clusters.push({srcStart:i, srcLen:len, out});
+    i += len;
+  }
+  const text = clusters.map(c => c.out).join('');
+  const srcToDisp = new Array(src.length + 1).fill(0);
+  const dispToSrc = new Array(text.length + 1);
+  let d = 0;
+  for(const c of clusters){
+    for(let k = 0; k < c.srcLen; k++) srcToDisp[c.srcStart + k] = d;
+    for(let k = 0; k < c.out.length; k++){
+      dispToSrc[d + k] = k === 0
+        ? {start:c.srcStart, end:c.srcStart}
+        : {start:c.srcStart, end:c.srcStart + c.srcLen};
+    }
+    d += c.out.length;
+  }
+  srcToDisp[src.length] = text.length;
+  dispToSrc[text.length] = {start:src.length, end:src.length};
+  return {text, srcToDisp, dispToSrc};
+}
+
+const state = {
+  src:'raise this stone in memory', setId:'elder',
+  sel:{start:26, end:26},
+  opts:{dividers:false, collapseDoubles:false}, reveal:false
+};
+let maps = null, applying = false;
+
+const editor  = document.getElementById('rune');
+const latinEl = document.getElementById('latin');
+
+function clamp(n, lo, hi){ return n < lo ? lo : n > hi ? hi : n; }
+
+function render(){
+  maps = transliterate(state.src, state.setId, state.opts);
+  const hadFocus = document.activeElement === editor;
+  if(editor.textContent !== maps.text) editor.textContent = maps.text;
+
+  state.sel.start = clamp(state.sel.start, 0, state.src.length);
+  state.sel.end   = clamp(state.sel.end,   0, state.src.length);
+  if(hadFocus) applySel();
+
+  const runes = [...maps.text].filter(c => c >= 'ᚠ' && c <= 'ᛸ').length;
+  const letters = (state.src.match(/[a-z]/gi) || []).length;
+  document.getElementById('count').textContent =
+    `${runes} rune${runes === 1 ? '' : 's'} · ${letters} letter${letters === 1 ? '' : 's'}`;
+
+  latinEl.hidden = !state.reveal;
+  if(state.reveal) latinEl.textContent = state.src || '—';
+}
+
+function applySel(){
+  const node = editor.firstChild;
+  const r = document.createRange();
+  const ds = maps.srcToDisp[state.sel.start], de = maps.srcToDisp[state.sel.end];
+  if(!node){ r.setStart(editor, 0); r.setEnd(editor, 0); }
+  else {
+    r.setStart(node, clamp(ds, 0, node.length));
+    r.setEnd(node, clamp(de, 0, node.length));
+  }
+  applying = true;
+  const s = window.getSelection();
+  s.removeAllRanges();
+  s.addRange(r);
+  applying = false;
+}
+
+function domToDisp(node, offset){
+  if(node === editor) return offset === 0 ? 0 : maps.text.length;
+  if(node === editor.firstChild) return offset;
+  return null;
+}
+
+function snap(dispIdx, prevSrc){
+  const m = maps.dispToSrc[clamp(dispIdx, 0, maps.text.length)];
+  if(!m) return prevSrc;
+  if(m.start === m.end) return m.start;
+  if(prevSrc >= m.end) return m.start;   // moving left, fall to cluster start
+  if(prevSrc <= m.start) return m.end;   // moving right, clear the cluster
+  return m.end;
+}
+
+document.addEventListener('selectionchange', () => {
+  if(applying || document.activeElement !== editor) return;
+  const s = window.getSelection();
+  if(!s.rangeCount) return;
+  const r = s.getRangeAt(0);
+  if(!editor.contains(r.startContainer)) return;
+  const ds = domToDisp(r.startContainer, r.startOffset);
+  const de = domToDisp(r.endContainer, r.endOffset);
+  if(ds === null || de === null) return;
+  const ns = snap(ds, state.sel.start);
+  const ne = ds === de ? ns : snap(de, state.sel.end);
+  if(ns !== state.sel.start || ne !== state.sel.end){
+    state.sel = {start:Math.min(ns, ne), end:Math.max(ns, ne)};
+  }
+  if(maps.srcToDisp[state.sel.start] !== ds || maps.srcToDisp[state.sel.end] !== de) applySel();
+});
+
+function replaceRange(start, end, text){
+  state.src = state.src.slice(0, start) + text + state.src.slice(end);
+  state.sel = {start:start + text.length, end:start + text.length};
+  render();
+}
+
+function wordEdge(from, dir){
+  let i = from;
+  if(dir < 0){
+    while(i > 0 && !isLetter(state.src[i-1].toLowerCase())) i--;
+    while(i > 0 && isLetter(state.src[i-1].toLowerCase())) i--;
+  } else {
+    const n = state.src.length;
+    while(i < n && !isLetter(state.src[i].toLowerCase())) i++;
+    while(i < n && isLetter(state.src[i].toLowerCase())) i++;
+  }
+  return i;
+}
+
+editor.addEventListener('beforeinput', e => {
+  const t = e.inputType;
+  if(t === 'insertFromPaste' || t === 'insertFromDrop') return; // handled by paste/drop
+  e.preventDefault();
+  const {start, end} = state.sel;
+  if(t === 'insertText' && e.data != null) replaceRange(start, end, e.data);
+  else if(t === 'insertLineBreak' || t === 'insertParagraph') replaceRange(start, end, '\n');
+  else if(t === 'deleteContentBackward')
+    start === end ? replaceRange(Math.max(0, start - 1), end, '') : replaceRange(start, end, '');
+  else if(t === 'deleteContentForward')
+    start === end ? replaceRange(start, Math.min(state.src.length, end + 1), '') : replaceRange(start, end, '');
+  else if(t === 'deleteWordBackward')
+    start === end ? replaceRange(wordEdge(start, -1), end, '') : replaceRange(start, end, '');
+  else if(t === 'deleteWordForward')
+    start === end ? replaceRange(start, wordEdge(end, 1), '') : replaceRange(start, end, '');
+  else if(t === 'deleteByCut') replaceRange(start, end, '');
+});
+
+editor.addEventListener('paste', e => {
+  e.preventDefault();
+  const text = (e.clipboardData || window.clipboardData).getData('text');
+  if(text) replaceRange(state.sel.start, state.sel.end, text.replace(/\r\n?/g, '\n'));
+});
+editor.addEventListener('drop', e => e.preventDefault());
+editor.addEventListener('focus', () => applySel());
+
+// controls
+document.querySelectorAll('.seg button').forEach(b => {
+  b.addEventListener('click', () => {
+    state.setId = b.dataset.set;
+    document.querySelectorAll('.seg button').forEach(o =>
+      o.setAttribute('aria-pressed', String(o === b)));
+    document.getElementById('setName').textContent = SETS[state.setId].label;
+    buildChart();
+    render();
+  });
+});
+document.getElementById('optReveal').addEventListener('change', e => {
+  state.reveal = e.target.checked; render();
+});
+document.getElementById('optDividers').addEventListener('change', e => {
+  state.opts.dividers = e.target.checked; render();
+});
+document.getElementById('optDoubles').addEventListener('change', e => {
+  state.opts.collapseDoubles = e.target.checked; render();
+});
+document.getElementById('clear').addEventListener('click', () => {
+  state.src = ''; state.sel = {start:0, end:0}; editor.focus(); render();
+});
+document.getElementById('copy').addEventListener('click', async e => {
+  const btn = e.currentTarget;
+  try{
+    await navigator.clipboard.writeText(maps.text);
+    btn.textContent = 'Copied';
+  }catch{
+    const r = document.createRange();
+    r.selectNodeContents(editor);
+    const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    btn.textContent = 'Selected — press ⌘C';
+  }
+  setTimeout(() => { btn.textContent = 'Copy runes'; }, 1600);
+});
+
+function runeFor(set, key){
+  if(set.multi[key]) return set.multi[key];
+  if(key === 'c') return set.hardC;
+  return set.single[key] || '';
+}
+function buildChart(){
+  const set = SETS[state.setId];
+  document.getElementById('chartTitle').textContent = set.title;
+  document.getElementById('chartNote').textContent = set.note;
+  document.getElementById('rules').innerHTML = set.rules;
+  document.getElementById('grid').innerHTML = set.order.map(k =>
+    `<div class="cell"><div class="r">${runeFor(set, k)}</div><div class="k">${k}</div></div>`).join('');
+}
+
+// restore across republishes where the viewer supports it
+const hot = window.claude && window.claude.hot;
+if(hot && hot.snapshot) hot.snapshot(() => ({
+  src:state.src, setId:state.setId, opts:state.opts, reveal:state.reveal
+}));
+function start(saved){
+  if(saved && typeof saved.src === 'string'){
+    state.src = saved.src;
+    state.setId = SETS[saved.setId] ? saved.setId : 'elder';
+    state.opts = Object.assign(state.opts, saved.opts || {});
+    state.reveal = !!saved.reveal;
+    state.sel = {start:state.src.length, end:state.src.length};
+    document.querySelectorAll('.seg button').forEach(o =>
+      o.setAttribute('aria-pressed', String(o.dataset.set === state.setId)));
+    document.getElementById('setName').textContent = SETS[state.setId].label;
+    document.getElementById('optReveal').checked = state.reveal;
+    document.getElementById('optDividers').checked = !!state.opts.dividers;
+    document.getElementById('optDoubles').checked = !!state.opts.collapseDoubles;
+  }
+  buildChart();
+  render();
+}
+hot && hot.ready ? hot.ready(start) : start(null);
+</script>
+
+</body></html>
